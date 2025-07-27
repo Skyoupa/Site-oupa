@@ -105,10 +105,9 @@
     <script>
         const requiredFiles = [
             'index.html',
-            '.htaccess', 
+            'files-check.txt', // Remplace .htaccess (non détectable via HTTP)
             'api/index.php',
-            'api/.htaccess',
-            'api/config.php',
+            'api/config.php', // Remplace api/.htaccess (non détectable)
             'api/database.php',
             'api/auth.php',
             'manifest.json',
