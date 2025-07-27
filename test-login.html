@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 Test Connexion Admin - Oupafamilly</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #0a0e1a 0%, #1a1f2e 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 {
+            color: #3b82f6;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.8);
+            color: #f8fafc;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            color: #6ee7b7;
+        }
+        
+        .error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+        }
+        
+        .info {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid #3b82f6;
+            color: #93c5fd;
+        }
+        
+        .credentials {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        .quick-fill {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #60a5fa;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        
+        .quick-fill:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+        
+        pre {
+            background: rgba(15, 23, 42, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Test Connexion Admin</h1>
+        
+        <div class="credentials">
+            <h3>🔑 Identifiants par défaut:</h3>
+            <strong>Email:</strong> admin@oupafamilly.com<br>
+            <strong>Mot de passe:</strong> Oupafamilly2024!<br>
+            <button class="quick-fill" onclick="quickFill()">⚡ Remplir automatiquement</button>
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Email ou Username:</label>
+                <input type="text" id="username" name="username" placeholder="admin@oupafamilly.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Mot de passe:</label>
+                <input type="password" id="password" name="password" placeholder="Oupafamilly2024!" required>
+            </div>
+            
+            <button type="submit" class="btn" id="loginBtn">
+                🚀 Tester la Connexion
+            </button>
+        </form>
+        
+        <div id="result"></div>
+        
+        <div style="margin-top: 30px; padding: 20px; background: rgba(59, 130, 246, 0.1); border-radius: 10px; border: 1px solid rgba(59, 130, 246, 0.3);">
+            <h3>🛠️ Actions de diagnostic:</h3>
+            <button class="btn" onclick="checkAdminAPI()" style="margin: 5px 0;">🔍 Vérifier Admin API</button>
+            <button class="btn" onclick="recreateAdmin()" style="margin: 5px 0; background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);">🔧 Recréer Admin</button>
+        </div>
+    </div>
+
+    <script>
+        function quickFill() {
+            document.getElementById('username').value = 'admin@oupafamilly.com';
+            document.getElementById('password').value = 'Oupafamilly2024!';
+        }
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<div class="result ${type}">${message}</div>`;
+        }
+
+        async function testLogin(username, password) {
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Test en cours...';
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showResult(`
+                        <h4>✅ Connexion réussie !</h4>
+                        <strong>Utilisateur:</strong> ${data.user.username}<br>
+                        <strong>Email:</strong> ${data.user.email}<br>
+                        <strong>Rôle:</strong> ${data.user.role}<br>
+                        <strong>Token:</strong> ${data.access_token.substring(0, 50)}...<br>
+                        <br>
+                        <em>🎉 L'authentification admin fonctionne parfaitement !</em>
+                    `, 'success');
+                } else {
+                    showResult(`
+                        <h4>❌ Échec de la connexion</h4>
+                        <strong>Erreur:</strong> ${data.error || 'Erreur inconnue'}<br>
+                        <strong>Code:</strong> ${response.status}<br>
+                        <br>
+                        <em>💡 Vérifiez les identifiants ou utilisez le diagnostic ci-dessous.</em>
+                    `, 'error');
+                }
+            } catch (error) {
+                showResult(`
+                    <h4>🚫 Erreur de connexion</h4>
+                    <strong>Message:</strong> ${error.message}<br>
+                    <br>
+                    <em>🔧 Problème de réseau ou API inaccessible.</em>
+                `, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🚀 Tester la Connexion';
+            }
+        }
+
+        async function checkAdminAPI() {
+            showResult('⏳ Vérification de l\'API admin en cours...', 'info');
+            
+            try {
+                const response = await fetch('/api/debug/admin-check');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(`
+                        <h4>📊 État de l'Admin API</h4>
+                        <strong>Admins trouvés:</strong> ${data.admins_found}<br>
+                        <strong>Admin existe:</strong> ${data.admin_exists ? 'Oui' : 'Non'}<br>
+                        <strong>Test mot de passe:</strong> ${data.password_test}<br>
+                        <strong>Heure:</strong> ${data.timestamp}<br>
+                        <br>
+                        <pre>${JSON.stringify(data.admins, null, 2)}</pre>
+                    `, data.password_test === 'VALID' ? 'success' : 'error');
+                } else {
+                    showResult(`❌ Erreur API: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showResult(`🚫 Erreur: ${error.message}`, 'error');
+            }
+        }
+
+        async function recreateAdmin() {
+            if (!confirm('⚠️ Êtes-vous sûr de vouloir recréer l\'admin ? Cela supprimera l\'admin actuel.')) {
+                return;
+            }
+            
+            showResult('⏳ Recréation de l\'admin en cours...', 'info');
+            
+            try {
+                const response = await fetch('/api/debug/recreate-admin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(`
+                        <h4>✅ Admin recréé avec succès !</h4>
+                        <strong>Message:</strong> ${data.message}<br>
+                        <br>
+                        <em>🎯 Vous pouvez maintenant tester la connexion avec les identifiants par défaut.</em>
+                    `, 'success');
+                } else {
+                    showResult(`❌ Erreur: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showResult(`🚫 Erreur: ${error.message}`, 'error');
+            }
+        }
+
+        // Gestionnaire du formulaire
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            testLogin(username, password);
+        });
+
+        // Auto-fill au chargement
+        window.addEventListener('load', function() {
+            quickFill();
+        });
+    </script>
+</body>
+</html>

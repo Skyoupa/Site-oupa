@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://oupafamilly.com/sitemap.xml
+
+# Disallow admin areas
+Disallow: /api/
+Disallow: /admin/private/
+Disallow: /*.log$
+
+# Allow important pages
+Allow: /
+Allow: /communaute
+Allow: /tutoriels
+Allow: /achievements
+Allow: /admin
+
+# Crawl-delay for bots
+Crawl-delay: 1

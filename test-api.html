@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Oupafamilly</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #0a0e1a; color: #fff; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #059669; }
+        .error { background: #dc2626; }
+        .info { background: #3b82f6; }
+        pre { background: #1f2937; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test API Oupafamilly</h1>
+    <div id="results"></div>
+    
+    <script>
+        const results = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+        
+        async function testAPI() {
+            addResult('🚀 Début des tests API...', 'info');
+            
+            // Test 1: API Status
+            try {
+                const response = await fetch('/api/');
+                const data = await response.json();
+                addResult(`✅ API Status: ${response.status}`, 'success');
+                addResult(`<pre>${JSON.stringify(data, null, 2)}</pre>`, 'info');
+            } catch (error) {
+                addResult(`❌ Erreur API Status: ${error.message}`, 'error');
+            }
+            
+            // Test 2: Tournois
+            try {
+                const response = await fetch('/api/tournaments/');
+                const data = await response.json();
+                addResult(`✅ Tournois: ${response.status} - ${Array.isArray(data) ? data.length : 0} tournois`, 'success');
+            } catch (error) {
+                addResult(`❌ Erreur Tournois: ${error.message}`, 'error');
+            }
+            
+            // Test 3: Tutoriels
+            try {
+                const response = await fetch('/api/content/tutorials');
+                const data = await response.json();
+                addResult(`✅ Tutoriels: ${response.status} - ${Array.isArray(data) ? data.length : 0} tutoriels`, 'success');
+            } catch (error) {
+                addResult(`❌ Erreur Tutoriels: ${error.message}`, 'error');
+            }
+            
+            // Test 4: Stats communauté
+            try {
+                const response = await fetch('/api/community/stats');
+                const data = await response.json();
+                addResult(`✅ Stats Communauté: ${response.status}`, 'success');
+                addResult(`<pre>${JSON.stringify(data, null, 2)}</pre>`, 'info');
+            } catch (error) {
+                addResult(`❌ Erreur Stats: ${error.message}`, 'error');
+            }
+            
+            addResult('🏁 Tests terminés', 'info');
+        }
+        
+        // Lancer les tests au chargement
+        testAPI();
+    </script>
+</body>
+</html>
