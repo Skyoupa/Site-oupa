@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Test Login Réparé - Oupafamilly</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #0a0e1a 0%, #1a1f2e 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 { color: #3b82f6; text-align: center; margin-bottom: 30px; }
+        h2 { color: #60a5fa; border-bottom: 2px solid #3b82f6; padding-bottom: 10px; }
+        
+        .form-group { margin-bottom: 20px; }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.8);
+            color: #f8fafc;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover { transform: translateY(-2px); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            color: #6ee7b7;
+        }
+        
+        .error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+        }
+        
+        .info {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid #3b82f6;
+            color: #93c5fd;
+        }
+        
+        .test-section {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Test Login Réparé</h1>
+        
+        <div class="test-section">
+            <h2>🧪 Tests de Diagnostic</h2>
+            <button class="btn" onclick="testAPIStatus()">1️⃣ Tester API Status</button>
+            <button class="btn" onclick="testAPISimple()">2️⃣ Tester API Simple</button>
+            <button class="btn" onclick="testAPIOriginal()">3️⃣ Tester API Originale</button>
+            <div id="diagnostic-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔐 Test Connexion Admin</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Email:</label>
+                    <input type="text" id="username" value="admin@oupafamilly.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Mot de passe:</label>
+                    <input type="password" id="password" value="Oupafamilly2024!" required>
+                </div>
+                
+                <button type="submit" class="btn" id="loginBtn">🚀 Test Connexion</button>
+            </form>
+            
+            <div id="login-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔧 Actions de Réparation</h2>
+            <button class="btn" onclick="fixAdmin()" style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);">
+                🛠️ Réparer Admin Maintenant
+            </button>
+            <div id="fix-result"></div>
+        </div>
+    </div>
+
+    <script>
+        function showResult(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `<div class="result ${type}">${message}</div>`;
+        }
+
+        async function testAPIStatus() {
+            showResult('diagnostic-results', '⏳ Test de l\'API status...', 'info');
+            
+            try {
+                const response = await fetch('/api-simple.php');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('diagnostic-results', `
+                        <h4>✅ API Simple fonctionne !</h4>
+                        <strong>Status:</strong> ${data.status}<br>
+                        <strong>Message:</strong> ${data.message}<br>
+                        <strong>Timestamp:</strong> ${data.timestamp}
+                    `, 'success');
+                } else {
+                    showResult('diagnostic-results', `❌ Erreur API: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showResult('diagnostic-results', `🚫 Erreur réseau: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAPISimple() {
+            showResult('diagnostic-results', '⏳ Test connexion via API simple...', 'info');
+            
+            try {
+                const response = await fetch('/api-simple.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: 'admin@oupafamilly.com',
+                        password: 'Oupafamilly2024!'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.access_token) {
+                    showResult('diagnostic-results', `
+                        <h4>✅ Connexion API Simple réussie !</h4>
+                        <strong>Utilisateur:</strong> ${data.user.username}<br>
+                        <strong>Rôle:</strong> ${data.user.role}<br>
+                        <strong>Token:</strong> ${data.access_token.substring(0, 50)}...<br>
+                        <br>
+                        <em>🎉 L'API fonctionne ! Le problème est dans le routage.</em>
+                    `, 'success');
+                } else {
+                    showResult('diagnostic-results', `
+                        <h4>❌ Erreur API Simple</h4>
+                        <strong>Erreur:</strong> ${data.error || 'Erreur inconnue'}<br>
+                        <strong>Code:</strong> ${response.status}
+                    `, 'error');
+                }
+            } catch (error) {
+                showResult('diagnostic-results', `🚫 Erreur: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAPIOriginal() {
+            showResult('diagnostic-results', '⏳ Test API originale...', 'info');
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: 'admin@oupafamilly.com',
+                        password: 'Oupafamilly2024!'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showResult('diagnostic-results', `
+                        <h4>✅ API Originale fonctionne !</h4>
+                        <strong>Utilisateur:</strong> ${data.user.username}<br>
+                        <strong>Rôle:</strong> ${data.user.role}
+                    `, 'success');
+                } else {
+                    showResult('diagnostic-results', `
+                        <h4>❌ API Originale - Erreur ${response.status}</h4>
+                        <strong>Erreur:</strong> ${data.error || response.statusText}<br>
+                        <em>Problème de routage confirmé.</em>
+                    `, 'error');
+                }
+            } catch (error) {
+                showResult('diagnostic-results', `
+                    <h4>🚫 API Originale inaccessible</h4>
+                    <strong>Erreur:</strong> ${error.message}<br>
+                    <em>Problème de routage ou de configuration serveur.</em>
+                `, 'error');
+            }
+        }
+
+        async function fixAdmin() {
+            showResult('fix-result', '⏳ Réparation de l\'admin...', 'info');
+            
+            try {
+                const response = await fetch('/fix-admin-now.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult('fix-result', `
+                        <h4>✅ Admin réparé avec succès !</h4>
+                        <strong>ID Admin:</strong> ${data.admin_id}<br>
+                        <strong>Test mot de passe:</strong> ${data.password_test}<br>
+                        <strong>Hash utilisé:</strong> ${data.hash_used}<br>
+                        <br>
+                        <em>🎯 Vous pouvez maintenant tester la connexion.</em>
+                    `, 'success');
+                } else {
+                    showResult('fix-result', `❌ Erreur: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showResult('fix-result', `🚫 Erreur: ${error.message}`, 'error');
+            }
+        }
+
+        // Test de connexion avec API simple
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('loginBtn');
+            
+            btn.disabled = true;
+            btn.textContent = '⏳ Test en cours...';
+            
+            try {
+                // Essayer d'abord l'API simple
+                const response = await fetch('/api-simple.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.access_token) {
+                    showResult('login-result', `
+                        <h4>✅ Connexion réussie (API Simple) !</h4>
+                        <strong>Utilisateur:</strong> ${data.user.username}<br>
+                        <strong>Email:</strong> ${data.user.email}<br>
+                        <strong>Rôle:</strong> ${data.user.role}<br>
+                        <br>
+                        <em>🎉 L'authentification fonctionne ! Le problème est le routage de l'API originale.</em>
+                    `, 'success');
+                } else {
+                    showResult('login-result', `
+                        <h4>❌ Échec de la connexion</h4>
+                        <strong>Erreur:</strong> ${data.error || 'Erreur inconnue'}<br>
+                        <strong>Code:</strong> ${response.status}
+                    `, 'error');
+                }
+            } catch (error) {
+                showResult('login-result', `🚫 Erreur: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🚀 Test Connexion';
+            }
+        });
+
+        // Auto-run status test
+        window.addEventListener('load', function() {
+            setTimeout(testAPIStatus, 1000);
+        });
+    </script>
+</body>
+</html>
