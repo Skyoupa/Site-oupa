@@ -66,9 +66,9 @@ ErrorDocument 404 /index.html
 ErrorDocument 403 /index.html
 ErrorDocument 500 /offline.html
 
-# Routes API - NE PAS rediriger vers index.html
-RewriteCond %{REQUEST_URI} ^/api/
-RewriteRule ^api/(.*)$ api/index.php [QSA,L]
+# Routes API - CORRECTION POUR OVH
+RewriteCond %{REQUEST_URI} ^/api/(.*)$
+RewriteRule ^api/(.*)$ api/index.php/$1 [QSA,L]
 
 # Service Worker et Manifest
 RewriteRule ^sw\.js$ sw.js [L]
